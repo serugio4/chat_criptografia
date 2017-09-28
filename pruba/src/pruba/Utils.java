@@ -101,16 +101,10 @@ public class Utils {
 		return listabinarios;
 	}
 
-	public String decimalToBinaryToAscii(ArrayList<Character> mensaje){
+	public String decimalToBinaryToAscii(String mensaje){
 		
-		String mensajeString = "";
-		String mensajeParte = "";
-		String completo ="";
-		
-		for (int i = 0; i < mensaje.size(); i++) {
-			mensajeString +=  mensaje.get(i);
-		}
-		mensajeParte = mensajeString;
+		String mensajeParte = mensaje;
+		String completo ="";		
 		
 		while(mensajeParte.length() > 0){			
 			char caracter = (char) Integer.parseInt(mensajeParte.substring(0, 8), 2);
@@ -118,10 +112,12 @@ public class Utils {
 			completo += caracter;
 			
 		}
-		System.out.println(completo);
+
 		
 		return completo;
 	}
+	
+	
 	
 //	public static void main(String[] args) {
 //		Utils u = new Utils();

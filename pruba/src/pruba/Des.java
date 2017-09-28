@@ -3,7 +3,7 @@ package pruba;
 import java.util.ArrayList;
 
 public class Des {
-	
+
 	Utils u = new Utils();
 
 	public int stringToAscii(char caracter) {		
@@ -304,11 +304,11 @@ public class Des {
 		return matrizS1[fila][col];
 
 	}
-	
+
 	public String pasarPorCajas (ArrayList<String> divididoEnOcho){
 		String despuesDeCajas = "";
 		ArrayList<Integer> numeros =  new ArrayList<>();
-		
+
 		numeros = u.binaryToInt(divididoEnOcho.get(0));
 		despuesDeCajas+=u.decimalTobinary(s1(numeros));		
 		numeros = u.binaryToInt(divididoEnOcho.get(1));
@@ -328,10 +328,10 @@ public class Des {
 
 		return despuesDeCajas;
 	}
-	
+
 	public String p(String despuesCajas){
 		String despuesP = "";
-		
+
 		despuesP+=despuesCajas.charAt(15); despuesP+=despuesCajas.charAt(6); despuesP+=despuesCajas.charAt(19);
 		despuesP+=despuesCajas.charAt(20); despuesP+=despuesCajas.charAt(28); despuesP+=despuesCajas.charAt(11);
 		despuesP+=despuesCajas.charAt(27); despuesP+=despuesCajas.charAt(16); despuesP+=despuesCajas.charAt(0);
@@ -343,23 +343,23 @@ public class Des {
 		despuesP+=despuesCajas.charAt(18); despuesP+=despuesCajas.charAt(12); despuesP+=despuesCajas.charAt(29);
 		despuesP+=despuesCajas.charAt(5); despuesP+=despuesCajas.charAt(21); despuesP+=despuesCajas.charAt(10);
 		despuesP+=despuesCajas.charAt(3); despuesP+=despuesCajas.charAt(24);
-		
+
 		return despuesP;
 	}
-	
+
 	public String funcioF(String r, String key){
-		
+
 		String despuesExpancion = funcionE(r);
 		String despuesXor = funcionXor(despuesExpancion, key);
 		ArrayList<String> dividirEnOcho = partirEn8(despuesXor);
 		String despuesCajas = pasarPorCajas(dividirEnOcho);
 		String despuesP = p(despuesCajas); 
 		return despuesP;
-		
+
 	}
-	
+
 	public String generarLiRi(String l0, String r0, String key){
-		
+
 		String li =  r0;
 		String ri = funcioF(r0, key);
 		ri = funcionXor(ri, l0);
@@ -374,21 +374,22 @@ public class Des {
 		String tempLiRi = generarLiRi(l0, r0, keys.get(0));
 		li = (tempLiRi.substring(0, tempLiRi.length()/2));
 		ri = (tempLiRi.substring(tempLiRi.length()/2));
-		
+
 		for (int i = 2; i <= 16; i++) {
 			tempLiRi =  generarLiRi(li, ri, keys.get(i-1));
 			li = (tempLiRi.substring(0, tempLiRi.length()/2));
-			ri = (tempLiRi.substring(tempLiRi.length()/2));			
+			ri = (tempLiRi.substring(tempLiRi.length()/2));
+
 		}
-		
+
 		return tempLiRi;
-		
+
 	}
-	
+
 	public String ipInv(String l16r16){
 		String temp = l16r16.substring(l16r16.length()/2) + l16r16.substring(0,l16r16.length()/2);
 		String despuesIpInv = "";
-		
+
 		despuesIpInv += temp.charAt(39); despuesIpInv += temp.charAt(7); despuesIpInv += temp.charAt(47);
 		despuesIpInv += temp.charAt(15); despuesIpInv += temp.charAt(55); despuesIpInv += temp.charAt(23);
 		despuesIpInv += temp.charAt(63); despuesIpInv += temp.charAt(31); despuesIpInv += temp.charAt(38);
@@ -411,44 +412,73 @@ public class Des {
 		despuesIpInv += temp.charAt(0); despuesIpInv += temp.charAt(40); despuesIpInv += temp.charAt(8);
 		despuesIpInv += temp.charAt(48); despuesIpInv += temp.charAt(16); despuesIpInv += temp.charAt(56);
 		despuesIpInv += temp.charAt(24);
-		
+
 		return despuesIpInv;
-		
+
 	}
-	
+
 	public String cifrarDes(String mensaje, ArrayList<String> keys){
-		
+
+		//String completo = completarBitsParaClave(mensaje);
 		String despuesIp = ip(mensaje);
 		String l0 = despuesIp.substring(0, despuesIp.length()/2);
 		String r0 = despuesIp.substring(despuesIp.length()/2);	
-		String despues16 = generarLiRi1a16(l0, r0, keys);		
-		return ipInv(despues16);
-		
-	}
-	
-	public 
-	
-	
-	
-	
-	
+		String despues16 = generarLiRi1a16(l0, r0, keys);
 
+		return ipInv(despues16);
+
+	}
+
+	public String descifrar(String mensaje, ArrayList<String> keys){
+
+		String despuesIp = ip(mensaje);
+		String mensajeDecifrado;
+		String r16 = despuesIp.substring(0, despuesIp.length()/2);
+		String l16 = despuesIp.substring(despuesIp.length()/2);		
+		mensajeDecifrado = ipInv(generarLiRi16a1(l16, r16, keys));
+
+		return mensajeDecifrado;
+	}
+
+	public String generarLiRi16a1(String l16, String r16, ArrayList<String> keys){
+		String li;   
+		String ri;
+		String tempLiRi = generarLiRiDescifrar(l16, r16, keys.get(15));
+		ri = (tempLiRi.substring(0, tempLiRi.length()/2));
+		li = (tempLiRi.substring(tempLiRi.length()/2));
+		
+		for (int i = 14; i == 0; i--) {
+			tempLiRi =  generarLiRiDescifrar(l16, r16, keys.get(i));
+			ri = (tempLiRi.substring(0, tempLiRi.length()/2));
+			li = (tempLiRi.substring(tempLiRi.length()/2));
+
+		}
+
+		return tempLiRi;
+
+	}
+
+	public String generarLiRiDescifrar(String l16, String r16, String key){
+
+		String ri =  l16;
+		String li = funcioF(l16, key);
+		li = funcionXor(li, r16);
+		String despuesGenerarLiRi="";
+		despuesGenerarLiRi = ri+li;
+		return despuesGenerarLiRi;
+
+	}
 
 	public static void main(String[] args) {
 		Des d = new Des();
-		//		String palabra = d.completarBitsParaClave("hola");
-		//		System.out.println(palabra+" "+palabra.length());
-				String pc1 = d.pc1("0001001100110100010101110111100110011011101111001101111111110001");
+		Utils u = new Utils();
+
+		String pc1 = d.pc1("0001001100110100010101110111100110011011101111001101111111110001");
 		ArrayList<String> keys =d.funcionLs(pc1);
-		//		d.generarLlaves("Hola");
-		//		System.out.println(d.ip("0000000100100011010001010110011110001001101010111100110111101111"));
-// 		String parteDer =d.funcionE("11110000101010101111000010101010");
-// 		String despuesXor = d.funcionXor(parteDer, "000110110000001011101111111111000111000001110010");
-//		ArrayList<String> dividirEnOcho = d.partirEn8(despuesXor);
-//		String despuesCajas = d.pasarPorCajas(dividirEnOcho);
-//		System.out.println(d.cifrarDes("0000000100100011010001010110011110001001101010111100110111101111", keys));		
-		//String despuesP=d.p(despuesCajas);
-		
+	
+		String mensajeCifrado = d.cifrarDes("0000000100100011010001010110011110001001101010111100110111101111", keys);
+		String mensajeDescifrado = d.descifrar(mensajeCifrado, keys);
+		System.out.println(mensajeDescifrado);
 
 
 
