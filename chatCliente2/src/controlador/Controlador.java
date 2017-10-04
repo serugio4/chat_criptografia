@@ -16,7 +16,7 @@ public class Controlador {
 	String matriz [][];
 	PanelBotones panelBotones;
 	Des des;
-	ArrayList<ArrayList> llavesDes;
+	ArrayList<String> llavesDes;
 
 	public Controlador() {
 		// TODO Auto-generated constructor stub
@@ -27,6 +27,8 @@ public class Controlador {
 		util = new Utils();
 		des = new Des();
 		llavesDes = new ArrayList<>();
+		generarLlavesDes();
+		
 
 	}
 
@@ -98,7 +100,7 @@ public class Controlador {
 	
 	public void generarLlavesDes() {
 		
-		this.llavesDes =des.crearLlavesCompleto("aBcDeFgH");
+		this.llavesDes =des.generarLlaves("aBcDeFgH");
 		
 	}
 	
@@ -145,11 +147,7 @@ public class Controlador {
 	
 	public String descifrarDes(String mensaje){
 		
-		System.out.println("Entre a descifrar DES");
-		ArrayList<Character> array = des.descifrar(mensaje, llavesDes);		
-		String mensaje2 = util.decimalToBinaryToAscii(array);
-		
-		return mensaje2;
+		return util.decimalToBinaryToAscii(des.descifrar(mensaje, llavesDes));
 		
 	}
 	

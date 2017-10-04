@@ -2,6 +2,8 @@ package pruba;
 
 import java.util.ArrayList;
 
+import javax.rmi.CORBA.Util;
+
 public class Des {
 
 	Utils u = new Utils();
@@ -26,13 +28,26 @@ public class Des {
 	}
 
 	public String completarBitsParaClave(String cadena){
-		String fraseBinario = "";		
+		String fraseBinario = "";
+		String incompleto="";
+		int puntoInicial;		
+		
 		for (int i = 0; i < cadena.length(); i++) {
 			fraseBinario += completarCeros(asciiToBinary(stringToAscii(cadena.charAt(i))));
 		}
-		while (fraseBinario.length()<64){
-			fraseBinario = '0'+fraseBinario;
+		
+		if(!(fraseBinario.length()%64==0)){
+			puntoInicial = (fraseBinario.length()/64)*64 ;
+			incompleto = fraseBinario.substring(puntoInicial);
+			fraseBinario = fraseBinario.substring(0, puntoInicial);
+			
 		}
+		while (incompleto.length()<64){
+			incompleto = '0'+incompleto;
+		}
+		
+		fraseBinario = fraseBinario + incompleto;
+		
 		return fraseBinario;		
 	}
 
@@ -419,55 +434,73 @@ public class Des {
 
 	public String cifrarDes(String mensaje, ArrayList<String> keys){
 
-		//String completo = completarBitsParaClave(mensaje);
-		String despuesIp = ip(mensaje);
-		String l0 = despuesIp.substring(0, despuesIp.length()/2);
-		String r0 = despuesIp.substring(despuesIp.length()/2);	
-		String despues16 = generarLiRi1a16(l0, r0, keys);
+		String completo = completarBitsParaClave(mensaje);
+		String l0, r0, despuesIp, despues16;
+		String otroMensaje = completo;
+		String mensajePorPartes="";
+		
+		while(otroMensaje.length()>0){		 
+			
+			despuesIp = ip(otroMensaje.substring(0,64));
+			l0 = despuesIp.substring(0, despuesIp.length()/2);
+			r0 = despuesIp.substring(despuesIp.length()/2);	
+			despues16 = generarLiRi1a16(l0, r0, keys);
+			mensajePorPartes += ipInv(despues16);
+			otroMensaje = otroMensaje.substring(64);
 
-		return ipInv(despues16);
+		}
+
+		return mensajePorPartes;
 
 	}
 
 	public String descifrar(String mensaje, ArrayList<String> keys){
+		String despuesIp;
+		String mensajeDecifrado="";
+		String r16 ;
+		String l16;
+		String otroMensaje=mensaje;
+		
+		while(otroMensaje.length()>0){
+			
+			despuesIp = ip(otroMensaje.substring(0,64));			
+			r16 = despuesIp.substring(0, despuesIp.length()/2);
+			l16 = despuesIp.substring(despuesIp.length()/2);		
+			mensajeDecifrado += ipInv(generarLyRdescifrar(l16, r16, keys));
+			otroMensaje = otroMensaje.substring(64);			
+			
+		}
 
-		String despuesIp = ip(mensaje);
-		String mensajeDecifrado;
-		String r16 = despuesIp.substring(0, despuesIp.length()/2);
-		String l16 = despuesIp.substring(despuesIp.length()/2);		
-		mensajeDecifrado = ipInv(generarLiRi16a1(l16, r16, keys));
+		
 
 		return mensajeDecifrado;
 	}
 
-	public String generarLiRi16a1(String l16, String r16, ArrayList<String> keys){
-		String li;   
-		String ri;
-		String tempLiRi = generarLiRiDescifrar(l16, r16, keys.get(15));
-		ri = (tempLiRi.substring(0, tempLiRi.length()/2));
-		li = (tempLiRi.substring(tempLiRi.length()/2));
+	public String generarLyRdescifrar(String l16, String r16, ArrayList<String>keys ){
 		
-		for (int i = 14; i == 0; i--) {
-			tempLiRi =  generarLiRiDescifrar(l16, r16, keys.get(i));
-			ri = (tempLiRi.substring(0, tempLiRi.length()/2));
-			li = (tempLiRi.substring(tempLiRi.length()/2));
-
-		}
-
-		return tempLiRi;
-
-	}
-
-	public String generarLiRiDescifrar(String l16, String r16, String key){
-
-		String ri =  l16;
-		String li = funcioF(l16, key);
+		String ri = l16;
+		String temp;
+		String li = funcioF(l16, keys.get(15));
 		li = funcionXor(li, r16);
-		String despuesGenerarLiRi="";
-		despuesGenerarLiRi = ri+li;
-		return despuesGenerarLiRi;
-
+		String mensajeCompelto;
+		
+		for (int i = 14; i >=0; i--) {
+			
+			temp = ri;
+			ri = li;
+			li = funcioF(li, keys.get(i));
+			li = funcionXor(li, temp);
+			
+			
+		}
+		
+		mensajeCompelto=ri+li;
+		return mensajeCompelto;		
+		
 	}
+
+
+
 
 	public static void main(String[] args) {
 		Des d = new Des();
@@ -476,9 +509,11 @@ public class Des {
 		String pc1 = d.pc1("0001001100110100010101110111100110011011101111001101111111110001");
 		ArrayList<String> keys =d.funcionLs(pc1);
 	
-		String mensajeCifrado = d.cifrarDes("0000000100100011010001010110011110001001101010111100110111101111", keys);
+		String mensajeCifrado = d.cifrarDes("holamama q ", keys);
 		String mensajeDescifrado = d.descifrar(mensajeCifrado, keys);
-		System.out.println(mensajeDescifrado);
+		System.out.println(u.decimalToBinaryToAscii(mensajeDescifrado));
+		
+		//System.out.println(d.completarBitsParaClave("holamamama"));
 
 
 

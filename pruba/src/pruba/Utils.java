@@ -104,12 +104,18 @@ public class Utils {
 	public String decimalToBinaryToAscii(String mensaje){
 		
 		String mensajeParte = mensaje;
-		String completo ="";		
+		String completo ="";
+		char caracter;
 		
 		while(mensajeParte.length() > 0){			
-			char caracter = (char) Integer.parseInt(mensajeParte.substring(0, 8), 2);
-			mensajeParte = mensajeParte.substring(8);
-			completo += caracter;
+			 
+		    int num = Integer.parseInt(mensajeParte.substring(0, 8), 2);
+		    if(!(num==0)){
+		    	caracter = (char) num;
+		    	completo += caracter;
+		    }
+		    
+			mensajeParte = mensajeParte.substring(8);			
 			
 		}
 

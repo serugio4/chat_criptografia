@@ -1,407 +1,214 @@
 package modelo;
 
-import java.awt.List;
-import java.io.Serializable;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-
 import utils.Utils;
 
-/**
- *  Contiene los métodos necesarios para la implementación del algoritmo DES para encriptación de mensajes
- * @author sergio garcia y jose alvarez
- * @version 1.0
- * 
- *
- */
+
+
 public class Des {
-	Utils utils = new Utils();
-	/**
-	 * convierte un String a la representación en ASCII de cada caracter
-	 * 
-	 * @param cadena
-	 * @return en un arrayList la representación en ASCII de cada caracter
-	 */
-	public ArrayList<Integer> stringToAscii(String cadena) {
 
-		char[] arreglo = cadena.toCharArray();
-		ArrayList<Integer> arrayAscii = new ArrayList<>();
-		for (char c : arreglo) {
+	Utils u = new Utils();
 
-			arrayAscii.add((int)c);
-
-		}
-
-		return arrayAscii;
-
+	public int stringToAscii(char caracter) {		
+		int ascii = (int)caracter;
+		return ascii;	
 	}
 
-	public ArrayList<String> asciiToBinary(ArrayList<Integer> cadena){
-
-		ArrayList<String> arrayBinario = new ArrayList<String>();;
-		String temp;
-		char[] tempChar;
-		for (Integer num : cadena) {
-
-			arrayBinario.add(Integer.toBinaryString(num));
-		}
-
-
-
-
-		return arrayBinario;
-	}
-
-	public ArrayList<String> completarCeros(ArrayList<String> cadena) {
-
-		String temp;
-		for (int i =0; i<cadena.size(); i++) {
-			temp= cadena.get(i);
-			while(temp.length()<8) {
-				temp =0+temp;
-			}
-
-			cadena.set(i, temp);
-
-		}
-
+	public String asciiToBinary(int ascii){
+		String cadena = "";
+		cadena+=Integer.toBinaryString(ascii);
 		return cadena;
 	}
 
-	public ArrayList<Character> stringArrayToCharArray(ArrayList<String> cadena) {
-
-		ArrayList<Character> characterArray= new ArrayList<>();;
-		char[] temp;
-
-		for (String c : cadena) {
-
-			temp = c.toCharArray();
-
-			for(int i=0; i<c.length(); i++) {
-
-				characterArray.add(temp[i]);
-
-			}
+	public String completarCeros(String cadena) {
+		String temp;
+		while(cadena.length()<8){
+			cadena = '0'+cadena;
 		}
-
-		return characterArray;
+		return cadena;
 	}
 
-	public ArrayList<Character> completarBitsParaClave(String cadena){
-
-		ArrayList<Character> claveLista = new ArrayList<>();
-
-		claveLista= stringArrayToCharArray(completarCeros(asciiToBinary(stringToAscii(cadena))));
-
-		while (claveLista.size()<64) {
-
-			claveLista.add('0');
-
+	public String completarBitsParaClave(String cadena){
+		String fraseBinario = "";
+		String incompleto="";
+		int puntoInicial;		
+		
+		for (int i = 0; i < cadena.length(); i++) {
+			fraseBinario += completarCeros(asciiToBinary(stringToAscii(cadena.charAt(i))));
 		}
-
-		return claveLista;
+		
+		if(!(fraseBinario.length()%64==0)){
+			puntoInicial = (fraseBinario.length()/64)*64 ;
+			incompleto = fraseBinario.substring(puntoInicial);
+			fraseBinario = fraseBinario.substring(0, puntoInicial);
+			
+		}
+		while (incompleto.length()<64){
+			incompleto = '0'+incompleto;
+		}
+		
+		fraseBinario = fraseBinario + incompleto;
+		
+		return fraseBinario;		
 	}
 
+	public String pc1(String clave){
+		String clavePermutada = "";
 
-	public ArrayList<Character> pc1(ArrayList<Character> clave){
-
-		ArrayList<Character> clavePermutada = new ArrayList<>();
-
-
-		clavePermutada.add(clave.get(56)); clavePermutada.add(clave.get(48)); clavePermutada.add(clave.get(40));
-		clavePermutada.add(clave.get(32)); clavePermutada.add(clave.get(24)); clavePermutada.add(clave.get(16));
-		clavePermutada.add(clave.get(8)); clavePermutada.add(clave.get(0)); clavePermutada.add(clave.get(57));
-		clavePermutada.add(clave.get(49)); clavePermutada.add(clave.get(41)); clavePermutada.add(clave.get(33));
-		clavePermutada.add(clave.get(25)); clavePermutada.add(clave.get(17)); clavePermutada.add(clave.get(9));
-		clavePermutada.add(clave.get(1)); clavePermutada.add(clave.get(58)); clavePermutada.add(clave.get(50));
-		clavePermutada.add(clave.get(42)); clavePermutada.add(clave.get(34)); clavePermutada.add(clave.get(26));
-		clavePermutada.add(clave.get(18)); clavePermutada.add(clave.get(10)); clavePermutada.add(clave.get(2));
-		clavePermutada.add(clave.get(59)); clavePermutada.add(clave.get(51)); clavePermutada.add(clave.get(43));
-		clavePermutada.add(clave.get(35)); clavePermutada.add(clave.get(62)); clavePermutada.add(clave.get(54));
-		clavePermutada.add(clave.get(46)); clavePermutada.add(clave.get(38)); clavePermutada.add(clave.get(30));
-		clavePermutada.add(clave.get(22)); clavePermutada.add(clave.get(14)); clavePermutada.add(clave.get(6));
-		clavePermutada.add(clave.get(61)); clavePermutada.add(clave.get(53)); clavePermutada.add(clave.get(45));
-		clavePermutada.add(clave.get(37)); clavePermutada.add(clave.get(29)); clavePermutada.add(clave.get(21));
-		clavePermutada.add(clave.get(13)); clavePermutada.add(clave.get(5)); clavePermutada.add(clave.get(60));
-		clavePermutada.add(clave.get(52)); clavePermutada.add(clave.get(44)); clavePermutada.add(clave.get(36));
-		clavePermutada.add(clave.get(28)); clavePermutada.add(clave.get(20)); clavePermutada.add(clave.get(12)); 
-		clavePermutada.add(clave.get(4)); clavePermutada.add(clave.get(27)); clavePermutada.add(clave.get(19)); 
-		clavePermutada.add(clave.get(11)); clavePermutada.add(clave.get(3));
-
+		clavePermutada+=clave.charAt(56); clavePermutada+=clave.charAt(48); clavePermutada+=clave.charAt(40);
+		clavePermutada+=clave.charAt(32); clavePermutada+=clave.charAt(24); clavePermutada+=clave.charAt(16);
+		clavePermutada+=clave.charAt(8); clavePermutada+=clave.charAt(0); clavePermutada+=clave.charAt(57);
+		clavePermutada+=clave.charAt(49); clavePermutada+=clave.charAt(41); clavePermutada+=clave.charAt(33);
+		clavePermutada+=clave.charAt(25); clavePermutada+=clave.charAt(17); clavePermutada+=clave.charAt(9);
+		clavePermutada+=clave.charAt(1); clavePermutada+=clave.charAt(58); clavePermutada+=clave.charAt(50);
+		clavePermutada+=clave.charAt(42); clavePermutada+=clave.charAt(34); clavePermutada+=clave.charAt(26);
+		clavePermutada+=clave.charAt(18); clavePermutada+=clave.charAt(10); clavePermutada+=clave.charAt(2);
+		clavePermutada+=clave.charAt(59); clavePermutada+=clave.charAt(51); clavePermutada+=clave.charAt(43);
+		clavePermutada+=clave.charAt(35); clavePermutada+=clave.charAt(62); clavePermutada+=clave.charAt(54);
+		clavePermutada+=clave.charAt(46); clavePermutada+=clave.charAt(38); clavePermutada+=clave.charAt(30);
+		clavePermutada+=clave.charAt(22); clavePermutada+=clave.charAt(14); clavePermutada+=clave.charAt(6);
+		clavePermutada+=clave.charAt(61); clavePermutada+=clave.charAt(53); clavePermutada+=clave.charAt(45);
+		clavePermutada+=clave.charAt(37); clavePermutada+=clave.charAt(29); clavePermutada+=clave.charAt(21);
+		clavePermutada+=clave.charAt(13); clavePermutada+=clave.charAt(5); clavePermutada+=clave.charAt(60);
+		clavePermutada+=clave.charAt(52); clavePermutada+=clave.charAt(44); clavePermutada+=clave.charAt(36);
+		clavePermutada+=clave.charAt(28); clavePermutada+=clave.charAt(20); clavePermutada+=clave.charAt(12);
+		clavePermutada+=clave.charAt(4); clavePermutada+=clave.charAt(27); clavePermutada+=clave.charAt(19);
+		clavePermutada+=clave.charAt(11); clavePermutada+=clave.charAt(3); 
 
 		return clavePermutada;
 	}
 
-	public ArrayList<Character> divParteIzquierda(ArrayList<Character> key){
+	public ArrayList<String> funcionLs(String llave){
 
-		ArrayList<Character> parteIzq = new ArrayList<>();
+		String izq = llave.substring(0, llave.length()/2);
+		String der = llave.substring(llave.length()/2);
+		char temp1, temp2;
+		ArrayList<String> keys = new ArrayList<>();
 
-		for (int i = 0; i < 28; i++) {
+		for (int i = 1; i < 17; i++) {
 
-			parteIzq.add(key.get(i));
+			if(i==1 || i==2 || i==9 || i==16){
+				temp1 = der.charAt(0);
+				der = der.substring(1)+temp1;
+				temp1 = izq.charAt(0);
+				izq = izq.substring(1)+temp1;				
+			}
+			else {
+				temp1 = der.charAt(0);
+				temp2 = der.charAt(1);
+				der = der.substring(2)+temp1+temp2;
+				temp1 = izq.charAt(0);
+				temp2 = izq.charAt(1);
+				izq = izq.substring(2)+temp1+temp2;				
+			}
 
+			keys.add(pc2(izq,der));
+			//System.out.println(i +" "+der+" "+izq+" "+keys.get(i-1).length());
 		}
 
+		return keys;
 
-		return parteIzq;
 	}
 
-	public ArrayList<Character> divParteDerecha(ArrayList<Character> key){
+	public String pc2(String izq, String der){
+		String completo = izq + der;
+		String key = "";
 
-		ArrayList<Character> parteDer = new ArrayList<>();
+		key += completo.charAt(13); key += completo.charAt(16); key += completo.charAt(10);
+		key += completo.charAt(23); key += completo.charAt(0); key += completo.charAt(4);
+		key += completo.charAt(2); key += completo.charAt(27); key += completo.charAt(14);
+		key += completo.charAt(5); key += completo.charAt(20); key += completo.charAt(9);
+		key += completo.charAt(22); key += completo.charAt(18); key += completo.charAt(11);
+		key += completo.charAt(3); key += completo.charAt(25); key += completo.charAt(7);
+		key += completo.charAt(15); key += completo.charAt(6); key += completo.charAt(26);
+		key += completo.charAt(19); key += completo.charAt(12); key += completo.charAt(1);
+		key += completo.charAt(40); key += completo.charAt(51); key += completo.charAt(30);
+		key += completo.charAt(36); key += completo.charAt(46); key += completo.charAt(54);
+		key += completo.charAt(29); key += completo.charAt(39); key += completo.charAt(50);
+		key += completo.charAt(44); key += completo.charAt(32); key += completo.charAt(47);
+		key += completo.charAt(43); key += completo.charAt(48); key += completo.charAt(38);
+		key += completo.charAt(55); key += completo.charAt(33); key += completo.charAt(52);
+		key += completo.charAt(45); key += completo.charAt(41); key += completo.charAt(49);
+		key += completo.charAt(35); key += completo.charAt(28); key += completo.charAt(31);
 
-		for (int i = 28; i < key.size(); i++) {
-
-			parteDer.add(key.get(i));
-
-		}
-
-
-		return parteDer;
+		return key;
 	}
 
-	public ArrayList<Character> funcionLs(ArrayList<Character> parteKey, int numeroIteracion){
+	public ArrayList<String> generarLlaves(String clave){
 
-		ArrayList<Character> despuesDeAplicarLs = new ArrayList<>();
+		return funcionLs(pc1(completarBitsParaClave(clave)));
 
-		for (int i = 0; i < parteKey.size(); i++) {
-			despuesDeAplicarLs.add(parteKey.get(i));
-
-		}
-
-		if(numeroIteracion==1 || numeroIteracion==2 || numeroIteracion==9 || numeroIteracion==16) {
-
-			despuesDeAplicarLs.remove(0);
-			despuesDeAplicarLs.add(parteKey.get(0));
-
-		}
-
-		else if (numeroIteracion==3 || numeroIteracion==4 || numeroIteracion==5 || numeroIteracion==6 ||
-				numeroIteracion==7 || numeroIteracion==8 || numeroIteracion==10 || numeroIteracion==11 || 
-				numeroIteracion==12 || numeroIteracion==13 || numeroIteracion==14 || numeroIteracion==15){
-
-			despuesDeAplicarLs.remove(0);
-			despuesDeAplicarLs.remove(0);
-			despuesDeAplicarLs.add(parteKey.get(0));
-			despuesDeAplicarLs.add(parteKey.get(1));
-		}
-
-
-		return despuesDeAplicarLs;
 	}
 
-	public ArrayList<ArrayList> crearPartesLlaves(ArrayList<Character> parte){
+	public String ip(String mensaje){
+		String despuesIp = "";
 
-		ArrayList<ArrayList> llaves = new ArrayList<>();
-
-		llaves.add(funcionLs(parte, 1));
-
-
-		for (int i = 2; i <= 16; i++) {
-
-			llaves.add(funcionLs(llaves.get(i-2),i));
-
-		}
-
-
-
-		return llaves;
-	}
-
-	public ArrayList<Character> pc2(ArrayList<Character> clavesIzq, ArrayList<Character> clavesDer){
-
-		ArrayList<Character> claveFinal = new ArrayList<>();
-
-		ArrayList<Character> unionClaves= new ArrayList<>();
-
-		for (int i = 0; i < clavesIzq.size(); i++) {
-			unionClaves.add(clavesIzq.get(i));
-		}
-		for (int i = 0; i < clavesDer.size(); i++) {
-			unionClaves.add(clavesDer.get(i));
-		}
-
-		claveFinal.add(unionClaves.get(13));	claveFinal.add(unionClaves.get(16));
-		claveFinal.add(unionClaves.get(10));	claveFinal.add(unionClaves.get(23));
-		claveFinal.add(unionClaves.get(0));		claveFinal.add(unionClaves.get(4));
-
-		claveFinal.add(unionClaves.get(2));		claveFinal.add(unionClaves.get(27));
-		claveFinal.add(unionClaves.get(14));	claveFinal.add(unionClaves.get(5));
-		claveFinal.add(unionClaves.get(20));	claveFinal.add(unionClaves.get(9));
-
-		claveFinal.add(unionClaves.get(22));	claveFinal.add(unionClaves.get(18));
-		claveFinal.add(unionClaves.get(11));	claveFinal.add(unionClaves.get(3));
-		claveFinal.add(unionClaves.get(25));	claveFinal.add(unionClaves.get(7));
-
-		claveFinal.add(unionClaves.get(15));	claveFinal.add(unionClaves.get(6));
-		claveFinal.add(unionClaves.get(26));	claveFinal.add(unionClaves.get(19));
-		claveFinal.add(unionClaves.get(12));	claveFinal.add(unionClaves.get(1));
-
-		claveFinal.add(unionClaves.get(40));	claveFinal.add(unionClaves.get(51));
-		claveFinal.add(unionClaves.get(30));	claveFinal.add(unionClaves.get(36));
-		claveFinal.add(unionClaves.get(46));	claveFinal.add(unionClaves.get(54));
-
-		claveFinal.add(unionClaves.get(29));	claveFinal.add(unionClaves.get(39));
-		claveFinal.add(unionClaves.get(50));	claveFinal.add(unionClaves.get(44));
-		claveFinal.add(unionClaves.get(32));	claveFinal.add(unionClaves.get(47));
-
-		claveFinal.add(unionClaves.get(43));	claveFinal.add(unionClaves.get(48));
-		claveFinal.add(unionClaves.get(38));	claveFinal.add(unionClaves.get(55));
-		claveFinal.add(unionClaves.get(33));	claveFinal.add(unionClaves.get(52));
-
-		claveFinal.add(unionClaves.get(45));	claveFinal.add(unionClaves.get(41));
-		claveFinal.add(unionClaves.get(49));	claveFinal.add(unionClaves.get(35));
-		claveFinal.add(unionClaves.get(28));	claveFinal.add(unionClaves.get(31));
-
-		return claveFinal;
-	}
-
-	public ArrayList<ArrayList> crearLlavesFinales(ArrayList<ArrayList> llavesIzq, ArrayList<ArrayList> llavesDer){
-
-		ArrayList<ArrayList> llavesFinales= new ArrayList<>();
-
-		for(int i =0; i<16; i++) {
-
-			llavesFinales.add(pc2(llavesIzq.get(i), llavesDer.get(i)));
-		}
-
-
-		return llavesFinales;
-	}
-
-	public ArrayList<ArrayList> crearLlavesCompleto(String clave){
-
-		ArrayList<ArrayList> llavesIzq = crearPartesLlaves(divParteIzquierda(pc1(completarBitsParaClave(clave))));
-		ArrayList<ArrayList> llavesDer = crearPartesLlaves(divParteDerecha(pc1(completarBitsParaClave(clave))));
-
-
-		return crearLlavesFinales(llavesIzq, llavesDer);
-	}
-
-
-	public ArrayList<Character> ip(ArrayList<Character> mensajeInicial){
-
-		ArrayList<Character> despuesIp = new ArrayList<>();
-
-
-		despuesIp.add(mensajeInicial.get(57));	despuesIp.add(mensajeInicial.get(49));
-		despuesIp.add(mensajeInicial.get(41));	despuesIp.add(mensajeInicial.get(33));
-		despuesIp.add(mensajeInicial.get(25));	despuesIp.add(mensajeInicial.get(17));
-		despuesIp.add(mensajeInicial.get(9));	despuesIp.add(mensajeInicial.get(1));
-		despuesIp.add(mensajeInicial.get(59));	despuesIp.add(mensajeInicial.get(51));
-		despuesIp.add(mensajeInicial.get(43));	despuesIp.add(mensajeInicial.get(35));
-		despuesIp.add(mensajeInicial.get(27));	despuesIp.add(mensajeInicial.get(19));
-		despuesIp.add(mensajeInicial.get(11));	despuesIp.add(mensajeInicial.get(3));
-		despuesIp.add(mensajeInicial.get(61));	despuesIp.add(mensajeInicial.get(53));
-		despuesIp.add(mensajeInicial.get(45));	despuesIp.add(mensajeInicial.get(37));
-		despuesIp.add(mensajeInicial.get(29));	despuesIp.add(mensajeInicial.get(21));
-		despuesIp.add(mensajeInicial.get(13));	despuesIp.add(mensajeInicial.get(5));
-		despuesIp.add(mensajeInicial.get(63));	despuesIp.add(mensajeInicial.get(55));
-		despuesIp.add(mensajeInicial.get(47));	despuesIp.add(mensajeInicial.get(39));
-		despuesIp.add(mensajeInicial.get(31));	despuesIp.add(mensajeInicial.get(23));
-		despuesIp.add(mensajeInicial.get(15));	despuesIp.add(mensajeInicial.get(7));
-		despuesIp.add(mensajeInicial.get(56));	despuesIp.add(mensajeInicial.get(48));
-		despuesIp.add(mensajeInicial.get(40));	despuesIp.add(mensajeInicial.get(32));
-		despuesIp.add(mensajeInicial.get(24));	despuesIp.add(mensajeInicial.get(16));
-		despuesIp.add(mensajeInicial.get(8));	despuesIp.add(mensajeInicial.get(0));
-		despuesIp.add(mensajeInicial.get(58));	despuesIp.add(mensajeInicial.get(50));
-		despuesIp.add(mensajeInicial.get(42));	despuesIp.add(mensajeInicial.get(34));
-		despuesIp.add(mensajeInicial.get(26));	despuesIp.add(mensajeInicial.get(18));
-		despuesIp.add(mensajeInicial.get(10));	despuesIp.add(mensajeInicial.get(2));
-		despuesIp.add(mensajeInicial.get(60));	despuesIp.add(mensajeInicial.get(52));
-		despuesIp.add(mensajeInicial.get(44));	despuesIp.add(mensajeInicial.get(36));
-		despuesIp.add(mensajeInicial.get(28));	despuesIp.add(mensajeInicial.get(20));
-		despuesIp.add(mensajeInicial.get(12));	despuesIp.add(mensajeInicial.get(4));
-		despuesIp.add(mensajeInicial.get(62));	despuesIp.add(mensajeInicial.get(54));
-		despuesIp.add(mensajeInicial.get(46));	despuesIp.add(mensajeInicial.get(38));
-		despuesIp.add(mensajeInicial.get(30));	despuesIp.add(mensajeInicial.get(22));
-		despuesIp.add(mensajeInicial.get(14));	despuesIp.add(mensajeInicial.get(6));
-
+		despuesIp+=mensaje.charAt(57); despuesIp+=mensaje.charAt(49); despuesIp+=mensaje.charAt(41);
+		despuesIp+=mensaje.charAt(33); despuesIp+=mensaje.charAt(25); despuesIp+=mensaje.charAt(17);
+		despuesIp+=mensaje.charAt(9); despuesIp+=mensaje.charAt(1); despuesIp+=mensaje.charAt(59);
+		despuesIp+=mensaje.charAt(51); despuesIp+=mensaje.charAt(43); despuesIp+=mensaje.charAt(35);
+		despuesIp+=mensaje.charAt(27); despuesIp+=mensaje.charAt(19); despuesIp+=mensaje.charAt(11);
+		despuesIp+=mensaje.charAt(3); despuesIp+=mensaje.charAt(61); despuesIp+=mensaje.charAt(53);
+		despuesIp+=mensaje.charAt(45); despuesIp+=mensaje.charAt(37); despuesIp+=mensaje.charAt(29);
+		despuesIp+=mensaje.charAt(21); despuesIp+=mensaje.charAt(13); despuesIp+=mensaje.charAt(5);
+		despuesIp+=mensaje.charAt(63); despuesIp+=mensaje.charAt(55); despuesIp+=mensaje.charAt(47);
+		despuesIp+=mensaje.charAt(39); despuesIp+=mensaje.charAt(31); despuesIp+=mensaje.charAt(23);
+		despuesIp+=mensaje.charAt(15); despuesIp+=mensaje.charAt(7); despuesIp+=mensaje.charAt(56);
+		despuesIp+=mensaje.charAt(48); despuesIp+=mensaje.charAt(40); despuesIp+=mensaje.charAt(32);
+		despuesIp+=mensaje.charAt(24); despuesIp+=mensaje.charAt(16); despuesIp+=mensaje.charAt(8);
+		despuesIp+=mensaje.charAt(0); despuesIp+=mensaje.charAt(58); despuesIp+=mensaje.charAt(50);
+		despuesIp+=mensaje.charAt(42); despuesIp+=mensaje.charAt(34); despuesIp+=mensaje.charAt(26);
+		despuesIp+=mensaje.charAt(18); despuesIp+=mensaje.charAt(10); despuesIp+=mensaje.charAt(2);
+		despuesIp+=mensaje.charAt(60); despuesIp+=mensaje.charAt(52); despuesIp+=mensaje.charAt(44);
+		despuesIp+=mensaje.charAt(36); despuesIp+=mensaje.charAt(28); despuesIp+=mensaje.charAt(20);
+		despuesIp+=mensaje.charAt(12); despuesIp+=mensaje.charAt(4); despuesIp+=mensaje.charAt(62);
+		despuesIp+=mensaje.charAt(54); despuesIp+=mensaje.charAt(46); despuesIp+=mensaje.charAt(38);
+		despuesIp+=mensaje.charAt(30); despuesIp+=mensaje.charAt(22); despuesIp+=mensaje.charAt(14);
+		despuesIp+=mensaje.charAt(6); 
 
 		return despuesIp;
 	}
-	
-	
 
-	public ArrayList<Character> despuesIpPartirenDos(ArrayList<Character> despuesIp, int desde, int hasta){
+	public String funcionE(String parteDer){
+		String despuesExp ="";
 
-		ArrayList<Character> pedazo = new ArrayList<>(despuesIp.subList(desde, hasta));
+		despuesExp+=parteDer.charAt(31); despuesExp+=parteDer.charAt(0); despuesExp+=parteDer.charAt(1);
+		despuesExp+=parteDer.charAt(2); despuesExp+=parteDer.charAt(3); despuesExp+=parteDer.charAt(4);
+		despuesExp+=parteDer.charAt(3); despuesExp+=parteDer.charAt(4); despuesExp+=parteDer.charAt(5);
+		despuesExp+=parteDer.charAt(6); despuesExp+=parteDer.charAt(7); despuesExp+=parteDer.charAt(8);
+		despuesExp+=parteDer.charAt(7); despuesExp+=parteDer.charAt(8); despuesExp+=parteDer.charAt(9);
+		despuesExp+=parteDer.charAt(10); despuesExp+=parteDer.charAt(11); despuesExp+=parteDer.charAt(12);
+		despuesExp+=parteDer.charAt(11); despuesExp+=parteDer.charAt(12); despuesExp+=parteDer.charAt(13);
+		despuesExp+=parteDer.charAt(14); despuesExp+=parteDer.charAt(15); despuesExp+=parteDer.charAt(16);
+		despuesExp+=parteDer.charAt(15); despuesExp+=parteDer.charAt(16); despuesExp+=parteDer.charAt(17);
+		despuesExp+=parteDer.charAt(18); despuesExp+=parteDer.charAt(19); despuesExp+=parteDer.charAt(20);
+		despuesExp+=parteDer.charAt(19); despuesExp+=parteDer.charAt(20); despuesExp+=parteDer.charAt(21);
+		despuesExp+=parteDer.charAt(22); despuesExp+=parteDer.charAt(23); despuesExp+=parteDer.charAt(24);
+		despuesExp+=parteDer.charAt(23); despuesExp+=parteDer.charAt(24); despuesExp+=parteDer.charAt(25);
+		despuesExp+=parteDer.charAt(26); despuesExp+=parteDer.charAt(27); despuesExp+=parteDer.charAt(28);
+		despuesExp+=parteDer.charAt(27); despuesExp+=parteDer.charAt(28); despuesExp+=parteDer.charAt(29);
+		despuesExp+=parteDer.charAt(30); despuesExp+=parteDer.charAt(31); despuesExp+=parteDer.charAt(0);
 
-		return pedazo;
+		return despuesExp;
 	}
 
-	public ArrayList<Character> funcionExpansionE(ArrayList<Character> parteDer){
-
-		ArrayList<Character> parteDerExpandida = new ArrayList<>();
-
-		parteDerExpandida.add(parteDer.get(31)); 		parteDerExpandida.add(parteDer.get(0));
-		parteDerExpandida.add(parteDer.get(1)); 		parteDerExpandida.add(parteDer.get(2));
-		parteDerExpandida.add(parteDer.get(3)); 		parteDerExpandida.add(parteDer.get(4));
-		parteDerExpandida.add(parteDer.get(3)); 		parteDerExpandida.add(parteDer.get(4));
-		parteDerExpandida.add(parteDer.get(5)); 		parteDerExpandida.add(parteDer.get(6));
-		parteDerExpandida.add(parteDer.get(7)); 		parteDerExpandida.add(parteDer.get(8));
-		parteDerExpandida.add(parteDer.get(7)); 		parteDerExpandida.add(parteDer.get(8));
-		parteDerExpandida.add(parteDer.get(9)); 		parteDerExpandida.add(parteDer.get(10));
-		parteDerExpandida.add(parteDer.get(11)); 		parteDerExpandida.add(parteDer.get(12));
-		parteDerExpandida.add(parteDer.get(11)); 		parteDerExpandida.add(parteDer.get(12));
-		parteDerExpandida.add(parteDer.get(13)); 		parteDerExpandida.add(parteDer.get(14));
-		parteDerExpandida.add(parteDer.get(15)); 		parteDerExpandida.add(parteDer.get(16));
-		parteDerExpandida.add(parteDer.get(15)); 		parteDerExpandida.add(parteDer.get(16));
-		parteDerExpandida.add(parteDer.get(17)); 		parteDerExpandida.add(parteDer.get(18));
-		parteDerExpandida.add(parteDer.get(19)); 		parteDerExpandida.add(parteDer.get(20));
-		parteDerExpandida.add(parteDer.get(19)); 		parteDerExpandida.add(parteDer.get(20));
-		parteDerExpandida.add(parteDer.get(21)); 		parteDerExpandida.add(parteDer.get(22));
-		parteDerExpandida.add(parteDer.get(23)); 		parteDerExpandida.add(parteDer.get(24));
-		parteDerExpandida.add(parteDer.get(23)); 		parteDerExpandida.add(parteDer.get(24));
-		parteDerExpandida.add(parteDer.get(25)); 		parteDerExpandida.add(parteDer.get(26));
-		parteDerExpandida.add(parteDer.get(27)); 		parteDerExpandida.add(parteDer.get(28));
-		parteDerExpandida.add(parteDer.get(27)); 		parteDerExpandida.add(parteDer.get(28));
-		parteDerExpandida.add(parteDer.get(29)); 		parteDerExpandida.add(parteDer.get(30));
-		parteDerExpandida.add(parteDer.get(31)); 		parteDerExpandida.add(parteDer.get(0));
-
-
-		return parteDerExpandida;
-	}
-
-	public ArrayList<Character> funcionXor(ArrayList<Character> a, ArrayList<Character> b){
-
-		ArrayList<Character> despuesDeXor = new ArrayList<>();
-		char temp;
-		for (int i = 0; i < a.size(); i++) {
-			int cosa =(a.get(i)^b.get(i));
-			temp = Character.forDigit(cosa, 10);
-			despuesDeXor.add(temp);
+	public String funcionXor(String despuesExp, String key){
+		String despuesXor ="";
+		for (int i = 0; i < despuesExp.length(); i++) {
+			despuesXor += despuesExp.charAt(i) ^ key.charAt(i);
 		}
-
-		return despuesDeXor;
+		return despuesXor;
 	}
 
-	public ArrayList<ArrayList> dividirEnSeis(ArrayList<Character> despuesXor){
+	public ArrayList<String> partirEn8(String despuesXor){
 
-		ArrayList<ArrayList> listaPedazosDe6 = new ArrayList<>();
-		ArrayList<Character> listaTemp;
+		ArrayList<String> ochoCajas = new ArrayList<>();
+		ochoCajas.add(despuesXor.substring(0,6)); ochoCajas.add(despuesXor.substring(6,12));
+		ochoCajas.add(despuesXor.substring(12,18)); ochoCajas.add(despuesXor.substring(18,24));
+		ochoCajas.add(despuesXor.substring(24,30)); ochoCajas.add(despuesXor.substring(30,36));
+		ochoCajas.add(despuesXor.substring(36,42)); ochoCajas.add(despuesXor.substring(42));
 
-
-		listaTemp = new ArrayList<>(despuesXor.subList(0, 6));
-
-		listaPedazosDe6.add(listaTemp);
-		listaTemp = new ArrayList<>(despuesXor.subList(6, 12));
-		listaPedazosDe6.add(listaTemp);
-		listaTemp = new ArrayList<>(despuesXor.subList(12, 18));
-		listaPedazosDe6.add(listaTemp);
-		listaTemp = new ArrayList<>(despuesXor.subList(18, 24));
-		listaPedazosDe6.add(listaTemp);
-		listaTemp = new ArrayList<>(despuesXor.subList(24, 30));
-		listaPedazosDe6.add(listaTemp);
-		listaTemp = new ArrayList<>(despuesXor.subList(30, 36));
-		listaPedazosDe6.add(listaTemp);
-		listaTemp = new ArrayList<>(despuesXor.subList(36, 42));
-		listaPedazosDe6.add(listaTemp);
-		listaTemp = new ArrayList<>(despuesXor.subList(42, 48));
-		listaPedazosDe6.add(listaTemp);
-
-
-		return listaPedazosDe6;
+		return ochoCajas;
 	}
 
 	public int s1 (ArrayList<Integer> b1){
@@ -417,7 +224,6 @@ public class Des {
 
 		return matrizS1[fila][col];
 
-
 	}
 
 	public int s2 (ArrayList<Integer> b2){
@@ -431,7 +237,6 @@ public class Des {
 				{13,8,10,1,3,15,4,2,11,6,7,12,0,5,14,9}};
 
 		return matrizS1[fila][col];
-
 
 	}
 
@@ -447,7 +252,6 @@ public class Des {
 
 		return matrizS1[fila][col];
 
-
 	}
 
 	public int s4 (ArrayList<Integer> b2){
@@ -462,7 +266,6 @@ public class Des {
 
 		return matrizS1[fila][col];
 
-
 	}
 	public int s5 (ArrayList<Integer> b2){
 
@@ -476,7 +279,6 @@ public class Des {
 
 		return matrizS1[fila][col];
 
-
 	}
 	public int s6 (ArrayList<Integer> b2){
 
@@ -489,7 +291,6 @@ public class Des {
 				{4,3,2,12,9,5,15,10,11,14,1,7,6,0,8,13}};
 
 		return matrizS1[fila][col];
-
 
 	}
 
@@ -505,7 +306,6 @@ public class Des {
 
 		return matrizS1[fila][col];
 
-
 	}
 	public int s8 (ArrayList<Integer> b2){
 
@@ -517,284 +317,207 @@ public class Des {
 				{7,11,4,1,9,12,14,2,0,6,10,13,15,3,5,8},
 				{2,1,14,7,4,10,8,13,15,12,9,0,3,5,6,11}};
 
-
-
 		return matrizS1[fila][col];
 
+	}
+
+	public String pasarPorCajas (ArrayList<String> divididoEnOcho){
+		String despuesDeCajas = "";
+		ArrayList<Integer> numeros =  new ArrayList<>();
+
+		numeros = u.binaryToInt(divididoEnOcho.get(0));
+		despuesDeCajas+=u.decimalTobinary(s1(numeros));		
+		numeros = u.binaryToInt(divididoEnOcho.get(1));
+		despuesDeCajas+=u.decimalTobinary(s2(numeros));		
+		numeros = u.binaryToInt(divididoEnOcho.get(2));
+		despuesDeCajas+=u.decimalTobinary(s3(numeros));		
+		numeros = u.binaryToInt(divididoEnOcho.get(3));
+		despuesDeCajas+=u.decimalTobinary(s4(numeros));		
+		numeros = u.binaryToInt(divididoEnOcho.get(4));
+		despuesDeCajas+=u.decimalTobinary(s5(numeros));		
+		numeros = u.binaryToInt(divididoEnOcho.get(5));
+		despuesDeCajas+=u.decimalTobinary(s6(numeros));		
+		numeros = u.binaryToInt(divididoEnOcho.get(6));
+		despuesDeCajas+=u.decimalTobinary(s7(numeros));		
+		numeros = u.binaryToInt(divididoEnOcho.get(7));
+		despuesDeCajas+=u.decimalTobinary(s8(numeros));
+
+		return despuesDeCajas;
+	}
+
+	public String p(String despuesCajas){
+		String despuesP = "";
+
+		despuesP+=despuesCajas.charAt(15); despuesP+=despuesCajas.charAt(6); despuesP+=despuesCajas.charAt(19);
+		despuesP+=despuesCajas.charAt(20); despuesP+=despuesCajas.charAt(28); despuesP+=despuesCajas.charAt(11);
+		despuesP+=despuesCajas.charAt(27); despuesP+=despuesCajas.charAt(16); despuesP+=despuesCajas.charAt(0);
+		despuesP+=despuesCajas.charAt(14); despuesP+=despuesCajas.charAt(22); despuesP+=despuesCajas.charAt(25);
+		despuesP+=despuesCajas.charAt(4); despuesP+=despuesCajas.charAt(17); despuesP+=despuesCajas.charAt(30);
+		despuesP+=despuesCajas.charAt(9); despuesP+=despuesCajas.charAt(1); despuesP+=despuesCajas.charAt(7);
+		despuesP+=despuesCajas.charAt(23); despuesP+=despuesCajas.charAt(13); despuesP+=despuesCajas.charAt(31);
+		despuesP+=despuesCajas.charAt(26); despuesP+=despuesCajas.charAt(2); despuesP+=despuesCajas.charAt(8);
+		despuesP+=despuesCajas.charAt(18); despuesP+=despuesCajas.charAt(12); despuesP+=despuesCajas.charAt(29);
+		despuesP+=despuesCajas.charAt(5); despuesP+=despuesCajas.charAt(21); despuesP+=despuesCajas.charAt(10);
+		despuesP+=despuesCajas.charAt(3); despuesP+=despuesCajas.charAt(24);
+
+		return despuesP;
+	}
+
+	public String funcioF(String r, String key){
+
+		String despuesExpancion = funcionE(r);
+		String despuesXor = funcionXor(despuesExpancion, key);
+		ArrayList<String> dividirEnOcho = partirEn8(despuesXor);
+		String despuesCajas = pasarPorCajas(dividirEnOcho);
+		String despuesP = p(despuesCajas); 
+		return despuesP;
 
 	}
 
-	public ArrayList<Character> pasarPorCajas(ArrayList<ArrayList> divididoEnOcho){
+	public String generarLiRi(String l0, String r0, String key){
 
-		ArrayList<ArrayList> despuesDeCajas = new ArrayList<>();
-		ArrayList<Character> despuesDeCajasFinal = new ArrayList<>();
-		ArrayList<Integer> temp = new ArrayList<>();
-		int retorno;
-		String mensaje="";
-
-		temp = utils.arrayCharacterToInt(divididoEnOcho.get(0));
-		retorno= s1(temp);
-		despuesDeCajas.add(utils.decimalTobinary(retorno));
-
-		temp = utils.arrayCharacterToInt(divididoEnOcho.get(1));
-		retorno= s2(temp);
-		despuesDeCajas.add(utils.decimalTobinary(retorno));
-
-		temp = utils.arrayCharacterToInt(divididoEnOcho.get(2));
-		retorno= s3(temp);
-		despuesDeCajas.add(utils.decimalTobinary(retorno));
-
-		temp = utils.arrayCharacterToInt(divididoEnOcho.get(3));
-		retorno= s4(temp);
-		despuesDeCajas.add(utils.decimalTobinary(retorno));
-
-		temp = utils.arrayCharacterToInt(divididoEnOcho.get(4));
-		retorno= s5(temp);
-		despuesDeCajas.add(utils.decimalTobinary(retorno));
-
-		temp = utils.arrayCharacterToInt(divididoEnOcho.get(5));
-		retorno= s6(temp);
-		despuesDeCajas.add(utils.decimalTobinary(retorno));
-
-		temp = utils.arrayCharacterToInt(divididoEnOcho.get(6));
-		retorno= s7(temp);
-		despuesDeCajas.add(utils.decimalTobinary(retorno));
-
-		temp = utils.arrayCharacterToInt(divididoEnOcho.get(7));
-		retorno= s8(temp);
-		despuesDeCajas.add(utils.decimalTobinary(retorno));
-
-
-
-
-		for(int i=0; i< despuesDeCajas.size();i++) {
-			for (int j = 0; j < despuesDeCajas.get(i).size(); j++) {
-
-				despuesDeCajasFinal.add((char)(despuesDeCajas.get(i).get(j)));
-
-			}
-		}
-
-
-
-		return despuesDeCajasFinal;
-	}
-
-	public ArrayList<Character> p(ArrayList<Character> despuesDeCajas){
-
-		ArrayList<Character> despuesDeP= new ArrayList<>();
-
-		despuesDeP.add(despuesDeCajas.get(15));	despuesDeP.add(despuesDeCajas.get(6));
-		despuesDeP.add(despuesDeCajas.get(19));	despuesDeP.add(despuesDeCajas.get(20));
-		despuesDeP.add(despuesDeCajas.get(28));	despuesDeP.add(despuesDeCajas.get(11));
-		despuesDeP.add(despuesDeCajas.get(27));	despuesDeP.add(despuesDeCajas.get(16));
-		despuesDeP.add(despuesDeCajas.get(0));	despuesDeP.add(despuesDeCajas.get(14));
-		despuesDeP.add(despuesDeCajas.get(22));	despuesDeP.add(despuesDeCajas.get(25));
-		despuesDeP.add(despuesDeCajas.get(4));	despuesDeP.add(despuesDeCajas.get(17));
-		despuesDeP.add(despuesDeCajas.get(30));	despuesDeP.add(despuesDeCajas.get(9));
-		despuesDeP.add(despuesDeCajas.get(1));	despuesDeP.add(despuesDeCajas.get(7));
-		despuesDeP.add(despuesDeCajas.get(23));	despuesDeP.add(despuesDeCajas.get(13));
-		despuesDeP.add(despuesDeCajas.get(31));	despuesDeP.add(despuesDeCajas.get(26));
-		despuesDeP.add(despuesDeCajas.get(2));	despuesDeP.add(despuesDeCajas.get(8));
-		despuesDeP.add(despuesDeCajas.get(18));	despuesDeP.add(despuesDeCajas.get(12));
-		despuesDeP.add(despuesDeCajas.get(29));	despuesDeP.add(despuesDeCajas.get(5));
-		despuesDeP.add(despuesDeCajas.get(21));	despuesDeP.add(despuesDeCajas.get(10));
-		despuesDeP.add(despuesDeCajas.get(3));	despuesDeP.add(despuesDeCajas.get(24));
-
-
-		return despuesDeP;
-	}
-
-	public ArrayList<Character> funcionF(ArrayList<Character> r, ArrayList<Character> key ){
-
-		ArrayList<Character> despuesExpansion = funcionExpansionE(r);
-
-		ArrayList<Character> despuesXor = funcionXor(despuesExpansion, key);
-
-
-		ArrayList<ArrayList> despuesDividirEnSeis = dividirEnSeis(despuesXor);
-
-		ArrayList<Character> despuesPasarPorCajas = pasarPorCajas(despuesDividirEnSeis);
-		ArrayList<Character> despuesDeP = p(despuesPasarPorCajas);
-
-		return despuesDeP;
-	}
-
-	public ArrayList<ArrayList> generarLiRi(ArrayList<Character>l0, ArrayList<Character>r0, ArrayList<Character>key){
-
-		ArrayList<Character>nuevoLi = r0;
-		ArrayList<Character>nuevoRi = funcionXor(l0, funcionF(r0, key));
-
-		ArrayList<ArrayList>despuesGenerarLiRi = new ArrayList<>();
-
-		despuesGenerarLiRi.add(nuevoLi);
-		despuesGenerarLiRi.add(nuevoRi);
-
-
+		String li =  r0;
+		String ri = funcioF(r0, key);
+		ri = funcionXor(ri, l0);
+		String despuesGenerarLiRi="";
+		despuesGenerarLiRi = li+ri;
 		return despuesGenerarLiRi;
+
 	}
-
-	public ArrayList<ArrayList> generarLiRi1A16(ArrayList<Character>l0, ArrayList<Character>r0, ArrayList<ArrayList>key){
-
-		ArrayList<Character>li= new ArrayList<>();;
-		ArrayList<Character>ri = new ArrayList<>();
-		ArrayList<ArrayList>liRiTemp;
-
-		liRiTemp= generarLiRi(l0, r0, key.get(0));
-
-		li= liRiTemp.get(0);
-		ri= liRiTemp.get(1);
+	public String generarLiRi1a16(String l0, String r0, ArrayList<String> keys){
+		String li;   
+		String ri;
+		String tempLiRi = generarLiRi(l0, r0, keys.get(0));
+		li = (tempLiRi.substring(0, tempLiRi.length()/2));
+		ri = (tempLiRi.substring(tempLiRi.length()/2));
 
 		for (int i = 2; i <= 16; i++) {
-
-
-			liRiTemp= generarLiRi(li, ri, key.get(i-1));
-
-			li= liRiTemp.get(0);
-			ri= liRiTemp.get(1);	
+			tempLiRi =  generarLiRi(li, ri, keys.get(i-1));
+			li = (tempLiRi.substring(0, tempLiRi.length()/2));
+			ri = (tempLiRi.substring(tempLiRi.length()/2));
 
 		}
 
-		return liRiTemp;
+		return tempLiRi;
+
 	}
 
-	public ArrayList<Character> ipInv(ArrayList<ArrayList> l16R16){
+	public String ipInv(String l16r16){
+		String temp = l16r16.substring(l16r16.length()/2) + l16r16.substring(0,l16r16.length()/2);
+		String despuesIpInv = "";
 
-		ArrayList<Character> temp = new ArrayList<>();
-		ArrayList<Character> despuesIpInv = new ArrayList<>();
-
-		temp.addAll(l16R16.get(1));
-		temp.addAll(l16R16.get(0));
-
-
-		despuesIpInv.add(temp.get(39));	despuesIpInv.add(temp.get(7));	despuesIpInv.add(temp.get(47));
-		despuesIpInv.add(temp.get(15));	despuesIpInv.add(temp.get(55));	despuesIpInv.add(temp.get(23));
-		despuesIpInv.add(temp.get(63));	despuesIpInv.add(temp.get(31));	despuesIpInv.add(temp.get(38));
-		despuesIpInv.add(temp.get(6));	despuesIpInv.add(temp.get(46));	despuesIpInv.add(temp.get(14));
-		despuesIpInv.add(temp.get(54));	despuesIpInv.add(temp.get(22));	despuesIpInv.add(temp.get(62));
-		despuesIpInv.add(temp.get(30));	despuesIpInv.add(temp.get(37));	despuesIpInv.add(temp.get(5));
-		despuesIpInv.add(temp.get(45));	despuesIpInv.add(temp.get(13));	despuesIpInv.add(temp.get(53));
-		despuesIpInv.add(temp.get(21));	despuesIpInv.add(temp.get(61));	despuesIpInv.add(temp.get(29));
-		despuesIpInv.add(temp.get(36));	despuesIpInv.add(temp.get(4));	despuesIpInv.add(temp.get(44));
-		despuesIpInv.add(temp.get(12));	despuesIpInv.add(temp.get(52));	despuesIpInv.add(temp.get(20));
-		despuesIpInv.add(temp.get(60));	despuesIpInv.add(temp.get(28));	despuesIpInv.add(temp.get(35));
-		despuesIpInv.add(temp.get(3));	despuesIpInv.add(temp.get(43));	despuesIpInv.add(temp.get(11));
-		despuesIpInv.add(temp.get(51));	despuesIpInv.add(temp.get(19));	despuesIpInv.add(temp.get(59));
-		despuesIpInv.add(temp.get(27));	despuesIpInv.add(temp.get(34));	despuesIpInv.add(temp.get(2));
-		despuesIpInv.add(temp.get(42));	despuesIpInv.add(temp.get(10));	despuesIpInv.add(temp.get(50));
-		despuesIpInv.add(temp.get(18));	despuesIpInv.add(temp.get(58));	despuesIpInv.add(temp.get(26));
-		despuesIpInv.add(temp.get(33));	despuesIpInv.add(temp.get(1));	despuesIpInv.add(temp.get(41));
-		despuesIpInv.add(temp.get(9));	despuesIpInv.add(temp.get(49));	despuesIpInv.add(temp.get(17));
-		despuesIpInv.add(temp.get(57));	despuesIpInv.add(temp.get(25));	despuesIpInv.add(temp.get(32));
-		despuesIpInv.add(temp.get(0));	despuesIpInv.add(temp.get(40));	despuesIpInv.add(temp.get(8));
-		despuesIpInv.add(temp.get(48));	despuesIpInv.add(temp.get(16));	despuesIpInv.add(temp.get(56));
-		despuesIpInv.add(temp.get(24));
-
+		despuesIpInv += temp.charAt(39); despuesIpInv += temp.charAt(7); despuesIpInv += temp.charAt(47);
+		despuesIpInv += temp.charAt(15); despuesIpInv += temp.charAt(55); despuesIpInv += temp.charAt(23);
+		despuesIpInv += temp.charAt(63); despuesIpInv += temp.charAt(31); despuesIpInv += temp.charAt(38);
+		despuesIpInv += temp.charAt(6); despuesIpInv += temp.charAt(46); despuesIpInv += temp.charAt(14);
+		despuesIpInv += temp.charAt(54); despuesIpInv += temp.charAt(22); despuesIpInv += temp.charAt(62);
+		despuesIpInv += temp.charAt(30); despuesIpInv += temp.charAt(37); despuesIpInv += temp.charAt(5);
+		despuesIpInv += temp.charAt(45); despuesIpInv += temp.charAt(13); despuesIpInv += temp.charAt(53);
+		despuesIpInv += temp.charAt(21); despuesIpInv += temp.charAt(61); despuesIpInv += temp.charAt(29);
+		despuesIpInv += temp.charAt(36); despuesIpInv += temp.charAt(4); despuesIpInv += temp.charAt(44);
+		despuesIpInv += temp.charAt(12); despuesIpInv += temp.charAt(52); despuesIpInv += temp.charAt(20);
+		despuesIpInv += temp.charAt(60); despuesIpInv += temp.charAt(28); despuesIpInv += temp.charAt(35);
+		despuesIpInv += temp.charAt(3); despuesIpInv += temp.charAt(43); despuesIpInv += temp.charAt(11);
+		despuesIpInv += temp.charAt(51); despuesIpInv += temp.charAt(19); despuesIpInv += temp.charAt(59);
+		despuesIpInv += temp.charAt(27); despuesIpInv += temp.charAt(34); despuesIpInv += temp.charAt(2);
+		despuesIpInv += temp.charAt(42); despuesIpInv += temp.charAt(10); despuesIpInv += temp.charAt(50);
+		despuesIpInv += temp.charAt(18); despuesIpInv += temp.charAt(58); despuesIpInv += temp.charAt(26);
+		despuesIpInv += temp.charAt(33); despuesIpInv += temp.charAt(1); despuesIpInv += temp.charAt(41);
+		despuesIpInv += temp.charAt(9); despuesIpInv += temp.charAt(49); despuesIpInv += temp.charAt(17);
+		despuesIpInv += temp.charAt(57); despuesIpInv += temp.charAt(25); despuesIpInv += temp.charAt(32);
+		despuesIpInv += temp.charAt(0); despuesIpInv += temp.charAt(40); despuesIpInv += temp.charAt(8);
+		despuesIpInv += temp.charAt(48); despuesIpInv += temp.charAt(16); despuesIpInv += temp.charAt(56);
+		despuesIpInv += temp.charAt(24);
 
 		return despuesIpInv;
+
 	}
 
-	public String cifrarDes(String mensaje, ArrayList<ArrayList> keys){
+	public String cifrarDes(String mensaje, ArrayList<String> keys){
 
-		ArrayList<String> mensajePorPartes =  new ArrayList<>();	
-		String otroMensaje =  mensaje;
-		ArrayList<Character> completoCifrado = new ArrayList<>();
-		String mensajecifrado = "";
-
-		while(otroMensaje.length()>0){
-			if(otroMensaje.length()<8){
-				mensajePorPartes.add(mensaje.substring(0));
-				otroMensaje = "";
-			}
-			else{
-				mensajePorPartes.add(mensaje.substring(0, 8));
-				otroMensaje = otroMensaje.substring(8);
-			}
-
-		}
-
-		for (int i = 0; i < mensajePorPartes.size(); i++) {
-			ArrayList<Character> mensajeCompleto = completarBitsParaClave(mensaje);		
-			ArrayList<Character> despuesIp =ip(mensajeCompleto);
-			ArrayList<Character> l0 = despuesIpPartirenDos(despuesIp, 0, despuesIp.size()/2);
-			ArrayList<Character> r0 = despuesIpPartirenDos(despuesIp, despuesIp.size()/2, despuesIp.size());
-			completoCifrado.addAll(ipInv(generarLiRi1A16(l0, r0, keys)));
-		}
+		String completo = completarBitsParaClave(mensaje);
+		String l0, r0, despuesIp, despues16;
+		String otroMensaje = completo;
+		String mensajePorPartes="";
 		
-		for (int i = 0; i < completoCifrado.size(); i++) {
-			mensajecifrado+=completoCifrado.get(i);
-		}
-
-		return mensajecifrado;
-
-	}
-
-	public ArrayList<ArrayList> generarDescifrarLiRi1A16(ArrayList<Character>r16, ArrayList<Character>l16, ArrayList<ArrayList>key){
-
-		ArrayList<Character>li= new ArrayList<>();;
-		ArrayList<Character>ri = new ArrayList<>();
-		ArrayList<ArrayList>liRiTemp;
-
-		liRiTemp= generarLiRi(r16, l16, key.get(15));
-
-		ri= liRiTemp.get(0);
-		li= liRiTemp.get(1);
-
-		for (int i = 14; i == 0 ; i--) {
-
-
-			liRiTemp= generarLiRi(ri, li, key.get(i));
-
-			ri= liRiTemp.get(0);
-			li= liRiTemp.get(1);	
-
-		}
-
-		return liRiTemp;
-	}
-
-	public ArrayList<Character> descifrar(String mensaje, ArrayList<ArrayList> keys){
-
-		//char[] cifrado = mensaje.toCharArray();
-		String cifrado = mensaje;
-		ArrayList<ArrayList> completo = new ArrayList<>();
-		ArrayList<Character> porPartes = new ArrayList<>();
-		ArrayList<Character> mensajeDescifrado = new ArrayList<>();
-		int cont = 0;
-
-		for (int i = 0; i < cifrado.length(); i+=64) {
-
-			for (int j = 0;j < 64; j++) {
-				porPartes.add(cifrado.charAt(j));
-				cont ++;
-			}
-			completo.add(porPartes);
-		}
-
-		for (int i = 0; i < completo.size(); i++) {
-
-			ArrayList<Character>despuesIp = ip(completo.get(i));
-			ArrayList<Character>r16 = despuesIpPartirenDos(despuesIp, 0, despuesIp.size()/2);
-			ArrayList<Character>l16 = despuesIpPartirenDos(despuesIp, despuesIp.size()/2, despuesIp.size());
+		while(otroMensaje.length()>0){		 
 			
-			mensajeDescifrado.addAll(ipInv(generarLiRi1A16(r16, l16, keys)));			
+			despuesIp = ip(otroMensaje.substring(0,64));
+			l0 = despuesIp.substring(0, despuesIp.length()/2);
+			r0 = despuesIp.substring(despuesIp.length()/2);	
+			despues16 = generarLiRi1a16(l0, r0, keys);
+			mensajePorPartes += ipInv(despues16);
+			otroMensaje = otroMensaje.substring(64);
 
 		}
+
+		return mensajePorPartes;
+
+	}
+
+	public String descifrar(String mensaje, ArrayList<String> keys){
+		String despuesIp;
+		String mensajeDecifrado="";
+		String r16 ;
+		String l16;
+		String otroMensaje=mensaje;
 		
+		while(otroMensaje.length()>0){
+			
+			despuesIp = ip(otroMensaje.substring(0,64));			
+			r16 = despuesIp.substring(0, despuesIp.length()/2);
+			l16 = despuesIp.substring(despuesIp.length()/2);		
+			mensajeDecifrado += ipInv(generarLyRdescifrar(l16, r16, keys));
+			otroMensaje = otroMensaje.substring(64);			
+			
+		}
 
 		
-		return mensajeDescifrado;
+
+		return mensajeDecifrado;
+	}
+
+	public String generarLyRdescifrar(String l16, String r16, ArrayList<String>keys ){
+		
+		String ri = l16;
+		String temp;
+		String li = funcioF(l16, keys.get(15));
+		li = funcionXor(li, r16);
+		String mensajeCompelto;
+		
+		for (int i = 14; i >=0; i--) {
+			
+			temp = ri;
+			ri = li;
+			li = funcioF(li, keys.get(i));
+			li = funcionXor(li, temp);
+			
+			
+		}
+		
+		mensajeCompelto=ri+li;
+		return mensajeCompelto;		
+		
 	}
 
 
-	//	public static void main(String[] args) {
-	//		
-	//		Des d = new Des();
-	//		
-	//		String cifrado = d.cifrarDes("Hola Que Hace", d.crearLlavesCompleto("abcdefgh"));
-	//		d.descifrar(cifrado, d.crearLlavesCompleto("abcdefgh"));
-	//		
-	//	}
 
 
+/*	public static void main(String[] args) {
+		Des d = new Des();
+		Utils u = new Utils();
+
+		String pc1 = d.pc1("0001001100110100010101110111100110011011101111001101111111110001");
+		ArrayList<String> keys =d.funcionLs(pc1);
+	
+		String mensajeCifrado = d.cifrarDes("holamama q ", keys);
+		String mensajeDescifrado = d.descifrar(mensajeCifrado, keys);
+		System.out.println(u.decimalToBinaryToAscii(mensajeDescifrado));
+		
+		//System.out.println(d.completarBitsParaClave("holamamama"));
+
+
+
+	}
+*/
 }

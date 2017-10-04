@@ -68,26 +68,19 @@ public class Utils {
 	
 	
 		
-	public ArrayList<Integer> arrayCharacterToInt(ArrayList<Character> a) {
+	public ArrayList<Integer> binaryToInt(String a) {
 		
-		ArrayList<Integer> toIntegers = new ArrayList<>();
-		
-		
+		ArrayList<Integer> toIntegers = new ArrayList<>();		
 		
 		String temp="";
-		temp+=a.get(0);
-		temp+=a.get(a.size()-1);
-		
-		int num = Integer.parseInt(temp,2);
-		
-		toIntegers.add(num);
-		
+		temp+=a.charAt(0);
+		temp+=a.charAt(a.length()-1);		
+		int num = Integer.parseInt(temp,2);		
+		toIntegers.add(num);		
 		temp="";
-		temp+=a.get(1);
-		temp+=a.get(2);
-		temp+=a.get(3);
-		temp+=a.get(4);
-		
+		for (int i = 1; i < 5; i++) {
+			temp+=a.charAt(i);
+		}		
 		num = Integer.parseInt(temp,2);
 		
 		toIntegers.add(num);
@@ -95,46 +88,42 @@ public class Utils {
 		return toIntegers;
 	}
 	
-	public ArrayList<Character> decimalTobinary(int decimal){
+	public String decimalTobinary(int decimal){
 		
-		ArrayList<Character> listabinarios = new ArrayList<>();
+		String listabinarios = "";
 		
-		String temp =Integer.toBinaryString(decimal);
+		listabinarios =Integer.toBinaryString(decimal);		
 		
-		
-		for (int i = 0; i < temp.length(); i++) {
-			
-			listabinarios.add(temp.charAt(i));
+		while (listabinarios.length()<4) {
+			listabinarios = '0'+listabinarios;			
 		}
 		
-		while (listabinarios.size()<4) {
-			listabinarios.add(0, '0');
-			
-		}
 		return listabinarios;
 	}
 
-	public String decimalToBinaryToAscii(ArrayList<Character> mensaje){
+	public String decimalToBinaryToAscii(String mensaje){
 		
-		String mensajeString = "";
-		String mensajeParte = "";
+		String mensajeParte = mensaje;
 		String completo ="";
-		
-		for (int i = 0; i < mensaje.size(); i++) {
-			mensajeString +=  mensaje.get(i);
-		}
-		mensajeParte = mensajeString;
+		char caracter;
 		
 		while(mensajeParte.length() > 0){			
-			char caracter = (char) Integer.parseInt(mensajeParte.substring(0, 8), 2);
-			mensajeParte = mensajeParte.substring(8);
-			completo += caracter;
+			 
+		    int num = Integer.parseInt(mensajeParte.substring(0, 8), 2);
+		    if(!(num==0)){
+		    	caracter = (char) num;
+		    	completo += caracter;
+		    }
+		    
+			mensajeParte = mensajeParte.substring(8);			
 			
 		}
-		System.out.println(completo);
+
 		
 		return completo;
 	}
+	
+	
 	
 //	public static void main(String[] args) {
 //		Utils u = new Utils();
