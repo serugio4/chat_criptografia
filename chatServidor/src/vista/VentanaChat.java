@@ -20,10 +20,10 @@ public class VentanaChat extends JFrame {
 		panelEnviar = new PanelEnviar();
 		panelBtn = new PanelBotones(ctrl, panelEnviar);
 		
-		setSize(700, 500);
+		setSize(1000, 500);
 		setTitle("Chat Servidor");
 		setLayout(new BorderLayout());
-		setResizable(false);
+		setResizable(true);
 		setLocationRelativeTo(null);
 				
 		add(panelEnviar, BorderLayout.CENTER);

@@ -16,6 +16,7 @@ public class Controlador {
 	String matriz [][];
 	PanelBotones panelBotones;
 	Des des;
+	RSA rsa;
 	ArrayList<String> llavesDes;
 
 	public Controlador() {
@@ -26,6 +27,7 @@ public class Controlador {
 		playFair = new PlayFair();
 		util = new Utils();
 		des = new Des();
+		rsa =  new RSA();
 		llavesDes = new ArrayList<>();
 		generarLlavesDes();
 		
@@ -61,6 +63,11 @@ public class Controlador {
 			conexion.enviarMensaje(panelEnviar.getCifrado(), 3);			
 
 		}
+		else if (panelBotones.getCbx().equalsIgnoreCase("RSA")){
+			panelEnviar.setCifrado(cifrarRsa(panelEnviar.getMensaje()));
+			panelEnviar.setConversacion("Yo: "+panelEnviar.getCifrado());
+			conexion.enviarMensaje(panelEnviar.getCifrado(), 4);
+		}
 
 	}
 
@@ -94,6 +101,10 @@ public class Controlador {
 		}
 		else if(primero =='3') {
 			panelEnviar.setConversacion((ip + ": "+descifrarAes(mensaje.substring(1))));
+			panelEnviar.setCifrado(ip + ": "+ mensaje.substring(1));
+		}
+		else if(primero =='4') {
+			panelEnviar.setConversacion((ip + ": "+descifrarRsa(mensaje.substring(1))));
 			panelEnviar.setCifrado(ip + ": "+ mensaje.substring(1));
 		}
 	}
@@ -149,6 +160,15 @@ public class Controlador {
 		
 		return util.decimalToBinaryToAscii(des.descifrar(mensaje, llavesDes));
 		
+	}
+	
+	public String cifrarRsa(String mensaje){
+		rsa.resetQ();
+		return rsa.cifrarRsa(mensaje);
+	}
+	public String descifrarRsa(String mensaje){
+		rsa.resetQ();
+		return rsa.descifrarRsa(mensaje);
 	}
 	
 	
